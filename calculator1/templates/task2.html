@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #40190f;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #38140B;
+        }
+        pre {
+            font-family: Arial, sans-serif;
+            background: #ffeae4;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #40190f;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Калькулятор 2</h1>
+        <form method="post">
+            <label>Вуглець (%):</label>
+            <input type="text" name="carbon">
+            <label>Водень (%):</label>
+            <input type="text" name="hydrogen">
+            <label>Кисень (%):</label>
+            <input type="text" name="oxygen">
+            <label>Сірка (%):</label>
+            <input type="text" name="sulfur">
+            <label>Нижча теплота горючої маси (МДж/кг):</label>
+            <input type="text" name="oilHeat">
+            <label>Вологість робочої маси (%):</label>
+            <input type="text" name="fuelMoisture">
+            <label>Зольність сухої маси (%):</label>
+            <input type="text" name="ash">
+            <label>Вміст ванадію (мг/кг):</label>
+            <input type="text" name="vanadium">
+            <button type="submit">Розрахувати</button>
+        </form>
+        {{if .Result}}
+        <pre>{{.Result}}</pre>
+        {{end}}
+        <a href="/">Назад</a>
+    </div>
+</body>
+</html>
