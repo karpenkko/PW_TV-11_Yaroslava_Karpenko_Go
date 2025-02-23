@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Розрахунок викидів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #40190f;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #38140B;
+        }
+        .result {
+            margin-top: 20px;
+            background: #ffeae4;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #40190f;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Розрахунок викидів</h2>
+        <form method="post">
+            <label>Вугілля (МДж/кг):</label>
+            <input type="text" name="coalCombustion">
+            
+            <label>Мазут (МДж/кг):</label>
+            <input type="text" name="fuelOilCombustion">
+            
+            <label>Вугілля (%):</label>
+            <input type="text" name="coalAshContent">
+            
+            <label>Мазут (%):</label>
+            <input type="text" name="fuelOilAshContent">
+            
+            <label>Вугілля (т):</label>
+            <input type="text" name="coalFuelMass">
+            
+            <label>Мазут (т):</label>
+            <input type="text" name="fuelOilFuelMass">
+            
+            <label>Ефективність золовловлення:</label>
+            <input type="text" name="dustRemovalEfficiency">
+            
+            <button type="submit">Розрахувати</button>
+        </form>
+
+        {{if .}}
+        <div class="result">
+            <h3>Результати:</h3>
+            <p>Валовий викид вугілля: {{.CoalEmissionIndex}} т.</p>
+            <p>Зольність вугілля: {{.CoalEmission}} %</p>
+            <p>Валовий викид мазуту: {{.FuelOilEmissionIndex}} т.</p>
+            <p>Зольність мазуту: {{.FuelOilEmission}} %</p>
+        </div>
+        {{end}}
+
+        <a href="/">Назад</a>
+    </div>
+</body>
+</html>
