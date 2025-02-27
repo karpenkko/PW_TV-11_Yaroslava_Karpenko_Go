@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор прибутку</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #666;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #40190f;
+            color: white;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #38140B;
+        }
+        .result {
+            margin-top: 20px;
+            background: #ffeae4;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Калькулятор прибутку</h2>
+        <form method="post">
+            <label>Потужність (кВт):</label>
+            <input type="text" name="power" required>
+            
+            <label>Початкове відхилення:</label>
+            <input type="text" name="deviationInitial" required>
+            
+            <label>Покращене відхилення:</label>
+            <input type="text" name="deviationImproved" required>
+            
+            <label>Вартість (грн/кВт·год):</label>
+            <input type="text" name="cost" required>
+            
+            <button type="submit">Розрахувати</button>
+        </form>
+
+        {{if .ProfitImproved}}
+        <div class="result">
+            <h3>Результати:</h3>
+            <p>Очікуваний прибуток: {{.ProfitImproved}} грн.</p>
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>
