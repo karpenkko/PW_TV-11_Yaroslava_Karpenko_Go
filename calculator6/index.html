@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор обладнання</title>
+    <style>
+        :root {
+            --primary-color: #38140B;
+            --bg-color: #ECECEC;
+            --text-color: #333;
+            --accent-color: #602E2E;
+            --border-radius: 8px;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .equipment-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        
+        .equipment-label {
+            flex: 3;
+            padding: 8px;
+        }
+        
+        .equipment-input {
+            flex: 2;
+            padding: 4px;
+        }
+        
+        .equipment-input input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+        }
+        
+        .equipment-input input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #ddd;
+            margin: 16px 0;
+        }
+        
+        .calculate-btn {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 20px 0;
+            width: 100%;
+        }
+        
+        .calculate-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .result-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .result-label {
+            flex: 2;
+        }
+        
+        .result-value {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .coefficient-input {
+            margin-bottom: 8px;
+        }
+        
+        .coefficient-input label {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .coefficient-input input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+        }
+        
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .equipment-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .equipment-label, .equipment-input {
+                flex: 1;
+                padding: 4px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Калькулятор обладнання</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card" id="equipment-table">
+            <h2 class="section-title">Параметри обладнання</h2>
+            <div id="equipment-list">
+                <div class="loading">Завантаження...</div>
+            </div>
+        </div>
+        
+        <button class="calculate-btn" id="calculate-btn">Обчислити</button>
+        
+        <div class="card">
+            <h2 class="section-title">Результати обчислення</h2>
+            <div class="result-row">
+                <div class="result-label">Груповий коефіцієнт використання</div>
+                <div class="result-value" id="group-util-coef">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Ефективна кількість ЕП</div>
+                <div class="result-value" id="effective-ep-amount">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Розрахункове активне навантаження</div>
+                <div class="result-value" id="calculated-active-load">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Розрахункове реактивне навантаження</div>
+                <div class="result-value" id="calculated-reactive-load">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Повна потужність</div>
+                <div class="result-value" id="calculated-full-power">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Розрахунковий груповий струм</div>
+                <div class="result-value" id="calculated-group-current">0.0</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="section-title">Коефіцієнти</h2>
+            <div class="coefficient-input">
+                <label for="active-coefficient">Розрахунковий коефіцієнт активної потужності</label>
+                <input type="text" id="active-coefficient" value="1.25">
+            </div>
+            <div class="coefficient-input">
+                <label for="transformer-coefficient">Коефіцієнт трансформатора</label>
+                <input type="text" id="transformer-coefficient" value="0.7">
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="section-title">Результати трансформатора</h2>
+            <div class="result-row">
+                <div class="result-label">Активне навантаження на шинах 0,38 кВ ТП</div>
+                <div class="result-value" id="transformer-active-load">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Реактивне навантаження на шинах 0,38 кВ ТП</div>
+                <div class="result-value" id="transformer-reactive-load">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Повна потужність на шинах 0,38 кВ ТП</div>
+                <div class="result-value" id="transformer-full-power">0.0</div>
+            </div>
+            <div class="result-row">
+                <div class="result-label">Розрахунковий груповий струм на шинах 0,38 кВ ТП</div>
+                <div class="result-value" id="transformer-group-current">0.0</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const equipmentList = document.getElementById('equipment-list');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const activeCoefficient = document.getElementById('active-coefficient');
+            const transformerCoefficient = document.getElementById('transformer-coefficient');
+            
+            // Result fields
+            const groupUtilCoef = document.getElementById('group-util-coef');
+            const effectiveEpAmount = document.getElementById('effective-ep-amount');
+            const calculatedActiveLoad = document.getElementById('calculated-active-load');
+            const calculatedReactiveLoad = document.getElementById('calculated-reactive-load');
+            const calculatedFullPower = document.getElementById('calculated-full-power');
+            const calculatedGroupCurrent = document.getElementById('calculated-group-current');
+            
+            // Transformer result fields
+            const transformerActiveLoad = document.getElementById('transformer-active-load');
+            const transformerReactiveLoad = document.getElementById('transformer-reactive-load');
+            const transformerFullPower = document.getElementById('transformer-full-power');
+            const transformerGroupCurrent = document.getElementById('transformer-group-current');
+            
+            // Equipment state
+            let equipmentData = [];
+            
+            // Fetch initial data
+            fetch('/api/initial-data')
+                .then(response => response.json())
+                .then(data => {
+                    equipmentData = data;
+                    renderEquipmentList();
+                })
+                .catch(error => {
+                    console.error('Error fetching initial data:', error);
+                    equipmentList.innerHTML = '<div class="error">Помилка завантаження даних</div>';
+                });
+            
+            // Render equipment list
+            function renderEquipmentList() {
+                equipmentList.innerHTML = '';
+                
+                equipmentData.forEach((equipment, index) => {
+                    const equipmentElement = document.createElement('div');
+                    equipmentElement.innerHTML = `
+                        <div class="equipment-row">
+                            <div class="equipment-label">Найменування ЕП</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="name" value="${equipment.name}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Номінальне значення ККД</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="efficiency" value="${equipment.efficiency}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Коефіцієнт потужності</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="powerFactor" value="${equipment.powerFactor}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Напруга навантаження</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="voltage" value="${equipment.voltage}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Кількість ЕП</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="quantity" value="${equipment.quantity}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Номінальна потужність</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="nominalPower" value="${equipment.nominalPower}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Коефіцієнт використання</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="utilizationFactor" value="${equipment.utilizationFactor}">
+                            </div>
+                        </div>
+                        <div class="equipment-row">
+                            <div class="equipment-label">Коефіцієнт реактивної потужності</div>
+                            <div class="equipment-input">
+                                <input type="text" data-index="${index}" data-field="reactivePowerFactor" value="${equipment.reactivePowerFactor}">
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (index < equipmentData.length - 1) {
+                        equipmentElement.innerHTML += '<div class="divider"></div>';
+                    }
+                    
+                    equipmentList.appendChild(equipmentElement);
+                });
+                
+                // Add event listeners to inputs
+                document.querySelectorAll('[data-index][data-field]').forEach(input => {
+                    input.addEventListener('input', handleInputChange);
+                });
+            }
+            
+            // Handle input changes
+            function handleInputChange(event) {
+                const index = parseInt(event.target.dataset.index);
+                const field = event.target.dataset.field;
+                const value = event.target.value;
+                
+                if (!isNaN(index) && field) {
+                    equipmentData[index][field] = value;
+                }
+            }
+            
+            // Handle calculate button click
+            calculateBtn.addEventListener('click', function() {
+                const requestData = {
+                    equipmentList: equipmentData,
+                    activeCoefficient: parseFloat(activeCoefficient.value),
+                    transformerCoefficient: parseFloat(transformerCoefficient.value)
+                };
+                
+                fetch('/api/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    updateResults(data);
+                })
+                .catch(error => {
+                    console.error('Error calculating:', error);
+                    alert('Помилка під час обчислення');
+                });
+            });
+            
+            // Update results
+            function updateResults(data) {
+                groupUtilCoef.textContent = data.groupUtilizationCoefficient.toFixed(2);
+                effectiveEpAmount.textContent = data.effectiveEpAmount.toFixed(2);
+                calculatedActiveLoad.textContent = data.calculatedPower.activeLoad.toFixed(2);
+                calculatedReactiveLoad.textContent = data.calculatedPower.reactiveLoad.toFixed(2);
+                calculatedFullPower.textContent = data.calculatedPower.fullPower.toFixed(2);
+                calculatedGroupCurrent.textContent = data.calculatedPower.groupCurrent.toFixed(2);
+                
+                transformerActiveLoad.textContent = data.transformerCalculations.activeLoad.toFixed(2);
+                transformerReactiveLoad.textContent = data.transformerCalculations.reactiveLoad.toFixed(2);
+                transformerFullPower.textContent = data.transformerCalculations.fullPower.toFixed(2);
+                transformerGroupCurrent.textContent = data.transformerCalculations.groupCurrent.toFixed(2);
+            }
+        });
+    </script>
+</body>
+</html>
